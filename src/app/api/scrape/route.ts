@@ -12,12 +12,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Here you would typically use a scraping library like cheerio or puppeteer
-    // For now, we'll simulate a response with some basic data
     const response = await fetch(url);
     const html = await response.text();
     
-    // Basic metadata extraction (you can enhance this based on your needs)
     const title = html.match(/<title>(.*?)<\/title>/i)?.[1] || 'No title found';
     const description = html.match(/<meta name="description" content="(.*?)"/i)?.[1] || 'No description found';
     
