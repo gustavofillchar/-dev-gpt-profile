@@ -1,7 +1,6 @@
 "use client";
 
 import { CompanyProfile } from '@/types/company-profile';
-import { CodeBlock } from "@/components/ui/code-block";
 
 interface JsonViewerProps {
   data: CompanyProfile;

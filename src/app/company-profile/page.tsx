@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,7 +26,7 @@ import ErrorComponent from "./components/error.component";
 import Header from "./components/header.component";
 import { fetchWebsiteData, analyzeContent, downloadProfile } from "@/services/company-profile.service";
 
-export default function CompanyProfile() {
+function CompanyProfileContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -429,5 +429,13 @@ export default function CompanyProfile() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CompanyProfile() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <CompanyProfileContent />
+    </Suspense>
   );
 }
