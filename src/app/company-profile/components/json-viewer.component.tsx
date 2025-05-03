@@ -14,7 +14,7 @@ export default function JsonViewer({ data }: JsonViewerProps) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <CodeBlock code={JSON.stringify(displayData, null, 2)} />
     </div>
   );

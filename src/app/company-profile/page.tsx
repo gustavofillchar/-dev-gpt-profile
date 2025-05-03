@@ -22,6 +22,8 @@ import type { CompanyProfile } from "@/types/company-profile";
 import { companyProfileSchema, type CompanyProfileFormData } from "@/lib/schemas";
 import JsonViewer from "./components/json-viewer.component";
 import Loading from "./components/loading-skeleton.component";
+import ErrorComponent from "./components/error.component";
+import Header from "./components/header.component";
 
 export default function CompanyProfile() {
   const router = useRouter();
@@ -70,9 +72,7 @@ export default function CompanyProfile() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.details || data.error || "Failed to analyze content"
-        );
+        throw new Error("Failed to analyze content");
       }
 
       console.log("Analysis response:", data);
@@ -92,9 +92,7 @@ export default function CompanyProfile() {
       }));
     } catch (err) {
       console.error("Analysis error:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to analyze content"
-      );
+      setError("Oops, something went wrong while analyzing the content. Please try again later.");
     }
   };
 
@@ -118,7 +116,7 @@ export default function CompanyProfile() {
         await analyzeContent(data.rawHtml);
       } catch (err) {
         console.error("Fetch error:", err);
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError("Oops, something went wrong while fetching the website data. Please try again later.");
       } finally {
         setIsLoading(false);
       }
@@ -150,26 +148,29 @@ export default function CompanyProfile() {
   const removeEmail = (index: number) => {
     setProfile((prev) => ({
       ...prev,
-      emails: prev.emails.length > 1 
-        ? prev.emails.filter((_, i) => i !== index)
-        : [""]
+      emails: prev.emails.filter((_, i) => i !== index)
     }));
   };
 
   const addEmail = () => {
     setProfile((prev) => ({
       ...prev,
-      emails: [...prev.emails, ""],
+      emails: [...prev.emails, ""]
+    }));
+  };
+
+  const updateEmail = (index: number, value: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      emails: prev.emails.map((email, i) => i === index ? value : email)
     }));
   };
 
   useEffect(() => {
-    if (profile.emails.length === 0) {
-      setProfile(prev => ({
-        ...prev,
-        emails: [""]
-      }));
-    }
+    setProfile(prev => ({
+      ...prev,
+      emails: prev.emails.length ? prev.emails : [""]
+    }));
   }, [profile.emails.length]);
 
   if (isLoading) {
@@ -179,17 +180,13 @@ export default function CompanyProfile() {
   }
 
   if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="text-red-500 mb-4">Error: {error}</div>
-        <Button onClick={() => router.push("/")}>Go Back</Button>
-      </div>
-    );
+    return <ErrorComponent message={error} />;
   }
 
   return (
     <div className="container mx-auto p-4 min-h-screen">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <Header />
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-stretch">
         <div className="md:col-span-3">
           <Card>
             <CardHeader>
@@ -436,25 +433,22 @@ export default function CompanyProfile() {
                                       value={email}
                                       onChange={(e) => {
                                         field.onChange(e);
-                                        const newEmails = [...profile.emails];
-                                        newEmails[index] = e.target.value;
-                                        onFormChange("emails", newEmails);
+                                        updateEmail(index, e.target.value);
                                       }}
                                       type="email"
                                       placeholder="Enter email address"
                                     />
-                                    <Button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        removeEmail(index);
-                                      }}
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                    >
-                                      <X className="h-3 w-3" />
-                                    </Button>
+                                    {profile.emails.length > 1 && (
+                                      <Button
+                                        type="button"
+                                        onClick={() => removeEmail(index)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                      >
+                                        <X className="h-3 w-3" />
+                                      </Button>
+                                    )}
                                   </div>
                                 </FormControl>
                                 <FormMessage />
@@ -469,11 +463,9 @@ export default function CompanyProfile() {
                         )}
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            addEmail();
-                          }}
-                          className="text-sm text-blue-500/70 hover:text-blue-700 hover:underline"
+                          onClick={addEmail}
+                          disabled={!profile.emails[profile.emails.length - 1]?.trim()}
+                          className="text-sm text-blue-500/70 hover:text-blue-700 hover:underline disabled:opacity-50 disabled:hover:text-blue-500/70 disabled:hover:no-underline"
                         >
                           + Add another email
                         </button>
@@ -490,7 +482,7 @@ export default function CompanyProfile() {
           </Card>
         </div>
 
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 h-full flex">
           <JsonViewer data={profile} />
         </div>
       </div>
