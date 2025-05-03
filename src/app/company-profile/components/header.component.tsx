@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <div className="mb-6">
+    <div className="my-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
