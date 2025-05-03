@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
@@ -8,4 +10,6 @@ module.exports = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
-}; 
+};
+
+export default config; 

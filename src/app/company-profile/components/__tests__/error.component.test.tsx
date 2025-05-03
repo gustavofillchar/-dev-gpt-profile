@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import ErrorComponent from '../error.component';
 
-// Mock the next/navigation module
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
