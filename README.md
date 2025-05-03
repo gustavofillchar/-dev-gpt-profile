@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Company Profile Generator
 
-## Getting Started
+This project is a Next.js application that generates company profiles by analyzing website content using OpenAI's GPT model. It provides a user-friendly interface to input company information and download structured profile data.
 
-First, run the development server:
+## Features
+
+- Website content analysis using OpenAI GPT
+- Dynamic form for company profile information
+- Multiple email management
+- JSON profile download
+- Responsive design with modern UI
+- Comprehensive test coverage
+
+## Prerequisites
+
+- Node.js 18.x or later
+- pnpm
+- OpenAI API key
+
+## Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# OpenAI API Key - Required for content analysis
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Optional: Set to 'development' or 'production'
+NODE_ENV=development
+```
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+pnpm install
+```
+
+## Development
+
+Run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses Jest and React Testing Library for testing. The test suite includes:
 
-## Learn More
+- Component rendering tests
+- User interaction tests
+- Form validation tests
+- API integration tests
+- Error handling tests
 
-To learn more about Next.js, take a look at the following resources:
+Run the tests with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The tests are located in the `__tests__` directories alongside their respective components.
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/                    # Next.js app directory
+│   ├── company-profile/    # Company profile page
+│   └── page.tsx           # Home page
+├── components/            # Reusable components
+├── services/             # API and business logic
+└── types/               # TypeScript type definitions
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Technologies Used
+
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+- Jest
+- React Testing Library
+- OpenAI API
+- pnpm
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
+
+## License
+
+This project is licensed under the MIT License.
