@@ -3,20 +3,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import CompanyProfile from "../page";
 import { fetchWebsiteData, analyzeContent, downloadProfile } from "@/services/company-profile.service";
 
-// Mock dos hooks do Next.js
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useSearchParams: jest.fn(),
 }));
-
-// Mock do crypto.randomUUID
+ 
 Object.defineProperty(global, 'crypto', {
   value: {
     randomUUID: () => '123e4567-e89b-12d3-a456-426614174000'
   }
 });
-
-// Mock dos serviços
+ 
 jest.mock("@/services/company-profile.service", () => ({
   fetchWebsiteData: jest.fn(),
   analyzeContent: jest.fn(),
@@ -88,28 +85,23 @@ describe("CompanyProfile", () => {
   it("allows adding and removing emails", async () => {
     render(<CompanyProfile />);
 
-    // Espera o componente carregar
-    await waitFor(() => {
+     await waitFor(() => {
       expect(screen.getByLabelText(/company name/i)).toBeInTheDocument();
     });
 
-    // Preenche o email atual para habilitar o botão de adicionar
+    
     const emailInput = screen.getByTestId("email-input");
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
 
-    // Adiciona um novo email
     const addEmailButton = screen.getByTestId("add-email-button");
     fireEvent.click(addEmailButton);
 
-    // Preenche o novo email
     const emailInputs = screen.getAllByTestId("email-input");
     fireEvent.change(emailInputs[1], { target: { value: "test2@example.com" } });
 
-    // Remove um email
     const removeButtons = screen.getAllByTestId("remove-email-button");
     fireEvent.click(removeButtons[1]);
 
-    // Verifica se o número de inputs de email diminuiu
     const emailInputsAfter = screen.getAllByTestId("email-input");
     expect(emailInputsAfter).toHaveLength(1);
   });
@@ -117,12 +109,10 @@ describe("CompanyProfile", () => {
   it("downloads profile when form is submitted", async () => {
     render(<CompanyProfile />);
 
-    // Espera o componente carregar
     await waitFor(() => {
       expect(screen.getByLabelText(/company name/i)).toBeInTheDocument();
     });
 
-    // Preenche o formulário
     const companyNameInput = screen.getByLabelText(/company name/i);
     const descriptionInput = screen.getByLabelText(/company description/i);
     const contactInput = screen.getByLabelText(/point of contact/i);
@@ -133,11 +123,9 @@ describe("CompanyProfile", () => {
     fireEvent.change(contactInput, { target: { value: "John Doe" } });
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
 
-    // Submete o formulário
     const submitButton = screen.getByTestId("download-json-button");
     fireEvent.click(submitButton);
 
-    // Verifica se a função de download foi chamada
     await waitFor(() => {
       expect(downloadProfile).toHaveBeenCalledWith({
         company_name: "Test Company",

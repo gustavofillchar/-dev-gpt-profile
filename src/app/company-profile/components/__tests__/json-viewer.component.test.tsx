@@ -19,11 +19,9 @@ describe("JsonViewer", () => {
   it("renders the formatted JSON data", () => {
     render(<JsonViewer data={mockData} />);
 
-    // Verifica se o código está presente
     const codeBlock = screen.getByTestId("json-viewer");
     expect(codeBlock).toBeInTheDocument();
 
-    // Verifica se os dados foram formatados corretamente
     const expectedOutput = {
       ...mockData,
       service_lines: mockData.service_lines.map(sl => sl.name)

@@ -1,10 +1,8 @@
 import { fetchWebsiteData, analyzeContent, downloadProfile } from '../company-profile.service';
 import type { CompanyProfile } from '@/types/company-profile';
 
-// Mock fetch globally
 global.fetch = jest.fn();
 
-// Mock crypto.randomUUID
 Object.defineProperty(global, 'crypto', {
   value: {
     randomUUID: () => 'mock-uuid-123'
@@ -13,7 +11,6 @@ Object.defineProperty(global, 'crypto', {
 
 describe('Company Profile Service', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     jest.clearAllMocks();
   });
 
@@ -81,7 +78,6 @@ describe('Company Profile Service', () => {
 
   describe('downloadProfile', () => {
     it('should create and trigger download of profile', () => {
-      // Mock DOM elements and methods
       const mockAppendChild = jest.fn();
       const mockRemoveChild = jest.fn();
       const mockClick = jest.fn();
@@ -99,12 +95,10 @@ describe('Company Profile Service', () => {
         poc: 'John Doe'
       };
 
-      // Mock URL.createObjectURL and URL.revokeObjectURL
       const mockUrl = 'blob:test-url';
       URL.createObjectURL = jest.fn().mockReturnValue(mockUrl);
       URL.revokeObjectURL = jest.fn();
 
-      // Mock createElement
       document.createElement = jest.fn().mockReturnValue({
         href: '',
         download: '',
