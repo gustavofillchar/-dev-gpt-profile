@@ -269,9 +269,9 @@ export default function CompanyProfile() {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="space-y-2">
+                    <div className="flex flex-wrap gap-2">
                       {profile.service_lines.map((sl) => (
-                        <div key={sl.id} className="flex items-center gap-2">
+                        <div key={sl.id} className="flex items-center gap-1 bg-blue-50 border border-blue-200 rounded-md px-2 py-1 hover:bg-blue-100 transition-colors">
                           <Input 
                             value={sl.name} 
                             onChange={(e) => {
@@ -280,6 +280,7 @@ export default function CompanyProfile() {
                               );
                               onFormChange("service_lines", newServiceLines);
                             }}
+                            className="h-6 px-1 py-0 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
                           />
                           <Button
                             type="button"
@@ -289,24 +290,25 @@ export default function CompanyProfile() {
                             }}
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            className="h-6 w-6 p-0 text-gray-500 hover:text-red-500 hover:bg-transparent"
                           >
-                            <X className="h-4 w-4" />
+                            <X className="h-3 w-3" />
                           </Button>
                         </div>
                       ))}
                       {isAddingServiceLine && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 bg-blue-50 border border-blue-200 rounded-md px-2 py-1">
                           <Input
                             value={newServiceLine}
                             onChange={(e) => setNewServiceLine(e.target.value)}
-                            placeholder="Enter new service line"
+                            placeholder="New service line"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
                                 addServiceLine();
                               }
                             }}
+                            className="h-6 px-1 py-0 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
                           />
                           <Button
                             type="button"
@@ -317,15 +319,15 @@ export default function CompanyProfile() {
                             }}
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            className="h-6 w-6 p-0 text-gray-500 hover:text-red-500 hover:bg-transparent"
                           >
-                            <X className="h-4 w-4" />
+                            <X className="h-3 w-3" />
                           </Button>
                         </div>
                       )}
                       {profile.service_lines.length === 0 && !isAddingServiceLine && (
                         <div className="text-sm text-gray-500">
-                          Add service lines for your company (e.g., Cybersecurity Services, Software Development)
+                          Add service lines for your company
                         </div>
                       )}
                     </div>
@@ -337,7 +339,7 @@ export default function CompanyProfile() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {profile.tier1_keywords.map((keyword, index) => (
-                        <div key={index} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1">
+                        <div key={index} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 cursor-not-allowed">
                           <span className="text-sm">{keyword}</span>
                           <Button
                             type="button"
@@ -393,89 +395,89 @@ export default function CompanyProfile() {
                     </div>
                   </div>
 
-                  <FormField
-                    control={form.control}
-                    name="poc"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Point of Contact</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              onFormChange("poc", e.target.value);
-                            }}
-                            placeholder="Enter POC name"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label>Email Addresses</Label>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addEmail();
-                        }}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1">
+                      <FormField
+                        control={form.control}
+                        name="poc"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Point of Contact</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  onFormChange("poc", e.target.value);
+                                }}
+                                placeholder="Enter POC name"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                    <div className="space-y-2">
-                      {profile.emails.map((email, index) => (
-                        <FormField
-                          key={index}
-                          control={form.control}
-                          name={`emails.${index}`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <div className="flex items-center gap-2">
-                                  <Input 
-                                    {...field}
-                                    value={email}
-                                    onChange={(e) => {
-                                      field.onChange(e);
-                                      const newEmails = [...profile.emails];
-                                      newEmails[index] = e.target.value;
-                                      onFormChange("emails", newEmails);
-                                    }}
-                                    type="email"
-                                    placeholder="Enter email address"
-                                  />
-                                  <Button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      removeEmail(index);
-                                    }}
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      ))}
-                      {profile.emails.length === 0 && (
-                        <div className="text-sm text-gray-500">
-                          Add email addresses for contact
-                        </div>
-                      )}
+
+                    <div className="flex-1">
+                      <Label>Email Addresses</Label>
+                      <div className="space-y-2 mt-2">
+                        {profile.emails.map((email, index) => (
+                          <FormField
+                            key={index}
+                            control={form.control}
+                            name={`emails.${index}`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <div className="flex items-center gap-2">
+                                    <Input 
+                                      {...field}
+                                      value={email}
+                                      onChange={(e) => {
+                                        field.onChange(e);
+                                        const newEmails = [...profile.emails];
+                                        newEmails[index] = e.target.value;
+                                        onFormChange("emails", newEmails);
+                                      }}
+                                      type="email"
+                                      placeholder="Enter email address"
+                                    />
+                                    <Button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        removeEmail(index);
+                                      }}
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ))}
+                        {profile.emails.length === 0 && (
+                          <div className="text-sm text-gray-500">
+                            Add email addresses for contact
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addEmail();
+                          }}
+                          className="text-sm text-blue-500/70 hover:text-blue-700 hover:underline"
+                        >
+                          + Add another email
+                        </button>
+                      </div>
                     </div>
                   </div>
 
