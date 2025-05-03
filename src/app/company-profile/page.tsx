@@ -84,7 +84,6 @@ export default function CompanyProfile() {
   }, [url, router]);
 
   const addServiceLine = () => {
-    if (!newServiceLine.trim()) return;
     setProfile((prev) => ({
       ...prev,
       service_lines: [
@@ -202,9 +201,10 @@ export default function CompanyProfile() {
                         size="sm"
                         onClick={(e) => {
                           e.preventDefault();
-                          setIsAddingServiceLine(true);
+                          addServiceLine();
                         }}
                         className="h-8 w-8 p-0"
+                        data-testid="add-service-line-button"
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
@@ -231,6 +231,7 @@ export default function CompanyProfile() {
                             variant="ghost"
                             size="sm"
                             className="h-6 w-6 p-0 text-gray-500 hover:text-red-500 hover:bg-transparent"
+                            data-testid="remove-service-line-button"
                           >
                             <X className="h-3 w-3" />
                           </Button>
@@ -242,13 +243,8 @@ export default function CompanyProfile() {
                             value={newServiceLine}
                             onChange={(e) => setNewServiceLine(e.target.value)}
                             placeholder="New service line"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                addServiceLine();
-                              }
-                            }}
                             className="h-6 px-1 py-0 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
+                            data-testid="new-service-line-input"
                           />
                           <Button
                             type="button"
@@ -380,6 +376,7 @@ export default function CompanyProfile() {
                                       }}
                                       type="email"
                                       placeholder="Enter email address"
+                                      data-testid="email-input"
                                     />
                                     {profile.emails.length > 1 && (
                                       <Button
@@ -388,6 +385,7 @@ export default function CompanyProfile() {
                                         variant="ghost"
                                         size="sm"
                                         className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                        data-testid="remove-email-button"
                                       >
                                         <X className="h-3 w-3" />
                                       </Button>
@@ -409,6 +407,7 @@ export default function CompanyProfile() {
                           onClick={addEmail}
                           disabled={!profile.emails[profile.emails.length - 1]?.trim()}
                           className="text-sm text-blue-500/70 hover:text-blue-700 hover:underline disabled:opacity-50 disabled:hover:text-blue-500/70 disabled:hover:no-underline"
+                          data-testid="add-email-button"
                         >
                           + Add another email
                         </button>
@@ -416,7 +415,7 @@ export default function CompanyProfile() {
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full" data-testid="download-json-button">
                     Download JSON
                   </Button>
                 </form>

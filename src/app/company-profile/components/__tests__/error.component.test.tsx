@@ -20,12 +20,14 @@ describe('ErrorComponent', () => {
   });
 
   it('renders error message correctly', () => {
-    const errorMessage = 'Test error message';
+    const errorMessage = 'Something went wrong';
     render(<ErrorComponent message={errorMessage} />);
 
     expect(screen.getByText('Oops!')).toBeInTheDocument();
     expect(screen.getByText('Error')).toBeInTheDocument();
-    expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    expect(screen.getByTestId('alert-description')).toHaveTextContent(errorMessage);
+    expect(screen.getByTestId('alert-circle-icon')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
   });
 
   it('navigates to home page when "Go Back" button is clicked', () => {

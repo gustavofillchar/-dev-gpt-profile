@@ -15,7 +15,12 @@ export default function JsonViewer({ data }: JsonViewerProps) {
 
   return (
     <div className="w-full h-full">
-      <CodeBlock code={JSON.stringify(displayData, null, 2)} />
+      <pre
+        className="p-4 rounded-lg bg-[#1a1a1a] text-gray-300 overflow-x-auto border border-[#333] text-sm font-mono whitespace-pre-wrap break-words"
+        data-testid="json-viewer"
+      >
+        {JSON.stringify(displayData, null, 2)}
+      </pre>
     </div>
   );
 } 
