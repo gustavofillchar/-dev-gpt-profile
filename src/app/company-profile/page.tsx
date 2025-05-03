@@ -24,6 +24,7 @@ import JsonViewer from "./components/json-viewer.component";
 import Loading from "./components/loading-skeleton.component";
 import ErrorComponent from "./components/error.component";
 import Header from "./components/header.component";
+import { fetchWebsiteData, analyzeContent, downloadProfile } from "@/services/company-profile.service";
 
 export default function CompanyProfile() {
   const router = useRouter();
@@ -59,43 +60,6 @@ export default function CompanyProfile() {
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
-  const analyzeContent = async (html: string) => {
-    try {
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ html }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error("Failed to analyze content");
-      }
-
-      console.log("Analysis response:", data);
-
-      const analysis = data.analysis;
-
-      setProfile((prev) => ({
-        ...prev,
-        company_name: analysis.company_name,
-        service_lines: analysis.service_lines.map((name: string) => ({
-          id: crypto.randomUUID(),
-          name,
-        })),
-        company_description: analysis.company_description,
-        tier1_keywords: analysis.tier1_keywords,
-        tier2_keywords: analysis.tier2_keywords,
-      }));
-    } catch (err) {
-      console.error("Analysis error:", err);
-      setError("Oops, something went wrong while analyzing the content. Please try again later.");
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       if (!url) {
@@ -105,15 +69,9 @@ export default function CompanyProfile() {
 
       try {
         setIsLoading(true);
-        const response = await fetch(
-          `/api/scrape?url=${encodeURIComponent(url)}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch website data");
-        }
-        const data = await response.json();
-
-        await analyzeContent(data.rawHtml);
+        const html = await fetchWebsiteData(url);
+        const analysis = await analyzeContent(html);
+        setProfile(prev => ({ ...prev, ...analysis }));
       } catch (err) {
         console.error("Fetch error:", err);
         setError("Oops, something went wrong while fetching the website data. Please try again later.");
@@ -174,9 +132,7 @@ export default function CompanyProfile() {
   }, [profile.emails.length]);
 
   if (isLoading) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -195,20 +151,7 @@ export default function CompanyProfile() {
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit((data) => {
-                  const cleanData = {
-                    ...data,
-                    service_lines: data.service_lines.map(({ name }) => name)
-                  };
-
-                  const blob = new Blob([JSON.stringify(cleanData, null, 2)], { type: 'application/json' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${data.company_name || 'company'}-profile.json`;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
+                  downloadProfile(data);
                 })} className="space-y-6">
                   <FormField
                     control={form.control}
