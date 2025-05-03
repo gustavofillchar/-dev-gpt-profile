@@ -17,20 +17,20 @@ export default function ErrorComponent({ message }: ErrorComponentProps) {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+      <Card className="w-full max-w-md" data-testid="error-card">
+        <CardHeader data-testid="error-card-header">
           <CardTitle className="text-center">Oops!</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent data-testid="error-card-content">
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="h-4 w-4" data-testid="alert-circle-icon" />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
+            <AlertDescription data-testid="alert-description">
               {message}
             </AlertDescription>
           </Alert>
         </CardContent>
-        <CardFooter className="flex justify-center">
+        <CardFooter className="flex justify-center" data-testid="error-card-footer">
           <Button 
             onClick={() => router.push("/")}
             variant="default"
